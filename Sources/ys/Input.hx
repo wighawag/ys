@@ -2,6 +2,7 @@ package ys;
 
 import kha.input.Keyboard;
 import kha.input.Mouse;
+import kha.input.Gamepad;
 import kha.Key;
 
 class Input{
@@ -29,6 +30,14 @@ class Input{
     return _lastWheelDelta;
   }
 
+  inline public function getAxisValue(axis : Int) : Float{
+    return _axes[axis];
+  }
+
+  inline public function getButtonValue(button : Int) : Float{
+    return _buttons[button];
+  }
+
   var _mouse : Mouse;
   var _lastMouseX : Int;
   var _lastMouseY : Int;
@@ -39,7 +48,11 @@ class Input{
   var _charKeysDown : Map<String,Bool>;
 	var _keysDown : Map<Key,Bool>;
 
-	private function new(keyboard : Keyboard, mouse : Mouse){
+  var _gamepad : Gamepad;
+  var _axes : Array<Float>;
+  var _buttons : Array<Float>;
+
+	private function new(keyboard : Keyboard, mouse : Mouse, gamepad : Gamepad){
 		_keyboard = keyboard;
 		_keysDown = new Map();
     _charKeysDown = new Map();
@@ -47,7 +60,24 @@ class Input{
 
     _mouse = mouse;
     _mouseButtonsDown = new Map();
-    _mouse.notify(mouseDown, mouseUp, mouseMove, mouseWheel);
+    if(_mouse != null){
+      _mouse.notify(mouseDown, mouseUp, mouseMove, mouseWheel);  
+    }
+    
+
+    _gamepad = gamepad;
+    _axes = new Array();
+    for(i in 0...10){
+      _axes.push(0);
+    }
+    _buttons = new Array();
+    for(i in 0...10){
+      _buttons.push(0);
+    }
+    if(_gamepad != null){
+      _gamepad.notify(gamepadAxis, gamepadButton);  
+    }
+    
 	}
 
 	function keyDown(k : Key, c : String){
@@ -83,6 +113,16 @@ class Input{
   function mouseWheel(delta : Int){
     _lastWheelDelta = delta;
   }
+
+
+  function gamepadAxis(axis : Int, value : Float){
+    _axes[axis] = value;
+  }
+
+  function gamepadButton(button : Int, value : Float){
+    _buttons[button] = value;
+  }
+
 
 
 }

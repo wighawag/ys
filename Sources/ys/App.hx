@@ -24,7 +24,7 @@ class App extends Game{
   private function new(name : String, app : Application){
     super(name,false);
     _app = app;
-    _input = new Input(kha.input.Keyboard.get(0), kha.input.Mouse.get(0));
+    _input = new Input(kha.input.Keyboard.get(0), kha.input.Mouse.get(0), kha.input.Gamepad.get(0));
   }
 
   override public function init(){
