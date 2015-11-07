@@ -11,6 +11,7 @@ interface Application{
   function render(now : Float, framebuffer : Framebuffer, input : Input) : Void;
 }
 
+@:access(ys.Input)
 class App extends Game{
   public static function start(name : String, app : Application){
     var starter = new Starter();
@@ -20,7 +21,7 @@ class App extends Game{
   var _lastNow : Float;
   var _app : Application;
   var _input : Input;
-  @:access(ys.Input)
+  
   private function new(name : String, app : Application){
     super(name,false);
     _app = app;
@@ -32,11 +33,14 @@ class App extends Game{
     _app.init(_lastNow, _input);
   }
 
+
   override public function update(){
     var now = kha.Sys.getTime();
     var dt = now - _lastNow;
     _lastNow = now;
+    _input.preUpdate();
     _app.update(now,dt,_input);
+    _input.postUpdate();
   }
 
   override public function render(framebuffer : Framebuffer){

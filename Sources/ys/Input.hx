@@ -22,6 +22,14 @@ class Input{
     return _lastMouseY;
   }
 
+  inline public function getMouseMovementX() : Int{
+    return _lastMouseMovementX;
+  }
+
+  inline public function getMouseMovementY() : Int{
+    return _lastMouseMovementY;
+  }
+
   inline public function isMouseLeftButtonDown() : Bool{
     return _mouseButtonsDown[1];
   }
@@ -41,6 +49,8 @@ class Input{
   var _mouse : Mouse;
   var _lastMouseX : Int;
   var _lastMouseY : Int;
+  var _lastMouseMovementX : Int;
+  var _lastMouseMovementY : Int;
   var _mouseButtonsDown : Map<Int, Bool>;
   var _lastWheelDelta : Int;
 
@@ -56,7 +66,10 @@ class Input{
 		_keyboard = keyboard;
 		_keysDown = new Map();
     _charKeysDown = new Map();
-		_keyboard.notify(keyDown,keyUp);
+    if(_keyboard != null){
+      _keyboard.notify(keyDown,keyUp);  
+    }
+		
 
     _mouse = mouse;
     _mouseButtonsDown = new Map();
@@ -79,6 +92,15 @@ class Input{
     }
     
 	}
+
+  function preUpdate(){
+
+  }
+
+  function postUpdate(){
+    _lastMouseMovementX = 0;
+    _lastMouseMovementY = 0;
+  }
 
 	function keyDown(k : Key, c : String){
     if(k == CHAR){
@@ -105,9 +127,11 @@ class Input{
     _mouseButtonsDown[button] = false;
   }
 
-  function mouseMove(mouseX : Int, mouseY : Int){
+  function mouseMove(mouseX : Int, mouseY : Int, movementX : Int, movementY : Int){
     _lastMouseX = mouseX;
     _lastMouseY = mouseY;
+    _lastMouseMovementX = movementX;
+    _lastMouseMovementY = movementY; //TODO reset on frane
   }
 
   function mouseWheel(delta : Int){
